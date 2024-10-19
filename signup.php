@@ -1,49 +1,68 @@
 <?php
-// Check if the request is a POST request
+// Include database connection
+include 'db.php';
+
+// Check if the request method is POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
-    // Sanitize and assign input values
-    $name = htmlspecialchars($_POST['name']);
-    $email = htmlspecialchars($_POST['email']);
-    $password = htmlspecialchars($_POST['password']);
+    // Get form data
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
     $recaptchaResponse = $_POST['g-recaptcha-response'];
 
     // reCAPTCHA secret key
-    $secretKey = "6LfvXGYqAAAAAPMznRIWN5E3KGBhK1eGd2BHiGEL";
-    
-    // Verify reCAPTCHA response
-    $recaptchaURL = "https://www.google.com/recaptcha/api/siteverify?secret=$secretKey&response=$recaptchaResponse";
-    $response = file_get_contents($recaptchaURL);
+    $secretKey = "6LfQXWYqAAAAAMkpYSQz_feWamZMT-aVwm2pLb3J"; // Replace with your actual secret key
+    $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$secretKey&response=$recaptchaResponse");
     $responseKeys = json_decode($response, true);
 
-    // Check if reCAPTCHA was successful
+    // Check if reCAPTCHA verification was successful
     if (intval($responseKeys["success"]) !== 1) {
-        echo "<script>alert('Please complete the reCAPTCHA.'); window.history.back();</script>";
+        echo "Please complete the reCAPTCHA.";
     } else {
-        // Connect to the database (ensure db.php includes the connection)
-        include 'db.php';
+        // Prepare SQL statement to insert user data
+        $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT); // Hash the password for security
+
+        // Bind parameters and execute the statement
+        $stmt->bind_param("sss", $name, $email, $hashedPassword);
         
-        // Check if email or username already exists
-        $checkUserQuery = "SELECT * FROM users WHERE email='$email'";
-        $result = mysqli_query($conn, $checkUserQuery);
-        
-        if (mysqli_num_rows($result) > 0) {
-            echo "<script>alert('This email is already registered.'); window.history.back();</script>";
+        if ($stmt->execute()) {
+            // If successful, redirect to thank you page
+            header('Location: thank_you.html');
+            exit(); // Ensure no further code is executed after the redirect
         } else {
-            // Hash the password and insert new user into the database
-            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-            $insertQuery = "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$hashedPassword')";
-            
-            if (mysqli_query($conn, $insertQuery)) {
-                echo "<script>alert('Thank you for signing up, $name!'); window.location.href = 'thankyou.html';</script>";
-            } else {
-                echo "<script>alert('An error occurred during registration. Please try again.'); window.history.back();</script>";
-            }
+            echo "Error: " . $stmt->error;
         }
+        
+        // Close statement and connection
+        $stmt->close();
     }
-} else {
-    // Handle non-POST requests (405 error)
-    http_response_code(405);
-    echo "405 Method Not Allowed: Please submit the form using POST method.";
 }
+
+// Check for username availability (keep this part if necessary)
+if (isset($_POST['username'])) {
+    $username = $_POST['username'];
+    
+    // Query to check if username exists
+    $query = "SELECT * FROM users WHERE username=?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        echo "taken";
+    } else {
+        echo "available";
+    }
+    
+    // Close statement
+    $stmt->close();
+}
+
+// Close the database connection
+$conn->close();
 ?>
+
+
+
