@@ -1,0 +1,141 @@
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(45deg, rgba(173, 216, 230, 1), rgba(255, 192, 203, 1));
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.container {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+    animation: fadeIn 1s ease-in-out;
+}
+
+
+h2 {
+    text-align: center;
+    color: rgba(30, 144, 255, 0.8);
+    margin-bottom: 20px;
+}
+
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-size: 16px;
+    color: rgba(105, 105, 105, 1);
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid rgba(173, 216, 230, 0.6);
+    background-color: rgba(255, 255, 255, 0.9);
+    transition: border 0.3s ease;
+}
+
+
+.form-group input:focus {
+    border: 1px solid rgba(30, 144, 255, 0.8);
+    outline: none;
+}
+
+
+button {
+    background-color: rgba(30, 144, 255, 1);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: rgba(0, 191, 255, 1);
+}
+
+
+.progress-container {
+    width: 100%;
+    background-color: rgba(220, 220, 220, 0.8);
+    border-radius: 25px;
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 10px;
+    background-color: rgba(0, 255, 127, 0.8); /* Green */
+    border-radius: 25px;
+    transition: width 0.3s ease;
+}
+
+
+#password-strength-status {
+    margin-top: 10px;
+    font-size: 14px;
+    color: rgba(255, 69, 0, 1); /* Red for weak initially */
+}
+
+#password-strength-status.weak {
+    color: rgba(255, 69, 0, 1); /* Red for weak */
+}
+
+#password-strength-status.medium {
+    color: rgba(255, 165, 0, 1); /* Orange for medium */
+}
+
+#password-strength-status.strong {
+    color: rgba(34, 139, 34, 1); /* Green for strong */
+}
+
+
+.g-recaptcha {
+    margin: 20px 0;
+}
+
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+button:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease-in-out;
+}
+
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        width: 90%;
+    }
+}
