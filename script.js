@@ -116,3 +116,13 @@ function updateProgressBar() {
     const progressPercentage = (filledFields / totalFields) * 100;
     progressBar.style.width = progressPercentage + "%";
 }
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const togglePasswordCheckbox = document.getElementById('toggle-password');
+    
+    if (togglePasswordCheckbox.checked) {
+        passwordInput.type = "text";
+    } else {
+        passwordInput.type = "password";
+    }
+}
