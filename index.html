@@ -53,5 +53,13 @@
         </form>
     </div>
     <script src="script.js"></script> 
+    <script>
+        // Handle the form submission
+        document.getElementById("signup-form").addEventListener("submit", function(event) {
+            event.preventDefault();  // Stop the form from submitting normally
+            alert("Thank you for signing up!");
+            // Optionally, you can use AJAX here to submit the form data to the server without refreshing the page.
+        });
+    </script>
 </body>
 </html>
